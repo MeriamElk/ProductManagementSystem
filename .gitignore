@@ -1,1 +1,19 @@
+# Environnement virtuel Python
+.venv/
+
+# Variables d'environnement
 .env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
