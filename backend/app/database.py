@@ -6,6 +6,9 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
+from backend.app.models.base import Base
+from backend.app.models import user, product
+
 ROOT_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(dotenv_path=ROOT_DIR / ".env")
 
@@ -25,3 +28,7 @@ def test_db_connection() -> None:
     except SQLAlchemyError as e:
         print("Database connection failed")
         print(e)
+
+
+def create_tables() -> None:
+    Base.metadata.create_all(bind=engine)
