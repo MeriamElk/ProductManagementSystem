@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-pink-100 flex flex-col">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="!shadow">
+    <span class="font-semibold">PMS Frontend</span>
+    <span class="flex-1"></span>
+
+    <button mat-raised-button color="accent" (click)="testApi()">
+      Test API
+    </button>
+  </mat-toolbar>
+
+  <!-- Contenu -->
+  <div class="flex-1 flex items-center justify-center p-6">
+    <div class="bg-white p-8 rounded-2xl shadow text-center w-full max-w-md">
+      <h1 class="text-3xl font-bold text-black">
+        Ça marche <span class="ml-2">✅</span>
+      </h1>
+
+      <p class="mt-2 text-gray-600">
+        Tailwind + Angular Material sont bien actifs.
+      </p>
+
+      <button mat-stroked-button color="primary" class="mt-6">
+        Test bouton Material
+      </button>
+
+      <p class="mt-6 text-sm text-gray-500">
+        Clique sur <b>Test API</b> et regarde la console (F12).
+      </p>
+    </div>
+  </div>
+</div>
