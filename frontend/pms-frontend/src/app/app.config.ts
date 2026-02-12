@@ -4,9 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-
 import { InMemoryCache, ApolloLink } from '@apollo/client/core';
-import { setContext } from '@apollo/client/link/context';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -24,7 +22,6 @@ export const appConfig: ApplicationConfig = {
         uri: environment.graphqlUrl,
       });
 
-      // ✅ Link pour ajouter Authorization: Bearer <token>
       const authLink = new ApolloLink((operation, forward) => {
         const token = getToken();
 
@@ -35,7 +32,7 @@ export const appConfig: ApplicationConfig = {
           },
         }));
 
-        return forward(operation);
+        return forward ? forward(operation) : null;
       });
 
       return {
@@ -43,6 +40,5 @@ export const appConfig: ApplicationConfig = {
         cache: new InMemoryCache(),
       };
     }),
-
   ],
 };
