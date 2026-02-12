@@ -1,10 +1,13 @@
 import { ApplicationConfig, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache, ApolloLink } from '@apollo/client/core';
+
+import { InMemoryCache } from '@apollo/client/core';
+import { setContext } from '@apollo/client/link/context';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -14,6 +17,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
+    provideAnimations(),
 
     provideApollo(() => {
       const httpLink = inject(HttpLink);
@@ -22,21 +26,19 @@ export const appConfig: ApplicationConfig = {
         uri: environment.graphqlUrl,
       });
 
-      const authLink = new ApolloLink((operation, forward) => {
+      const authLink = setContext((_, context: any) => {
         const token = getToken();
 
-        operation.setContext(({ headers = {} }: any) => ({
+        return {
           headers: {
-            ...headers,
+            ...(context?.headers ?? {}),
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
-        }));
-
-        return forward ? forward(operation) : null;
+        };
       });
 
       return {
-        link: ApolloLink.from([authLink, http]),
+        link: authLink.concat(http),
         cache: new InMemoryCache(),
       };
     }),

@@ -1,0 +1,41 @@
+.layout {
+  height: 100vh;
+}
+
+/* --- DARK MODE: on force les surfaces Material visibles --- */
+.layout.dark {
+  background: #121212;
+  color: #eee;
+}
+
+/* Sidenav / drawer */
+.layout.dark .sidenav,
+.layout.dark .mat-drawer {
+  background: #1e1e1e !important;
+  color: #eee !important;
+}
+
+/* Toolbar */
+.layout.dark .mat-toolbar {
+  background: #202a70 !important; /* garde ton bleu mais plus sombre */
+  color: #fff !important;
+}
+
+/* Page content area */
+.page {
+  padding: 16px;
+}
+
+/* Petites utilitaires */
+.toolbar .spacer {
+  flex: 1 1 auto;
+}
+
+.sidenav {
+  width: 260px;
+}
+
+/* Bouton full width */
+.w-full {
+  width: 100%;
+}
