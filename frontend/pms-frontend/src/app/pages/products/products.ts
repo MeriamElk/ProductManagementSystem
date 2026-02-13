@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { finalize } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,8 +35,10 @@ export class ProductsComponent implements OnInit {
   private snack = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
-  loading = false;
+  private cdr = inject(ChangeDetectorRef);
+  private zone = inject(NgZone);
 
+  loading = false;
   dataSource = new MatTableDataSource<Product>([]);
   columns = ['name', 'price', 'quantity', 'actions'];
 
@@ -50,27 +52,46 @@ export class ProductsComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
+    this.cdr.detectChanges();
 
     this.productsApi
       .getProductsOnce()
-      .pipe(finalize(() => (this.loading = false)))
+      .pipe(take(1))
       .subscribe({
         next: (products) => {
-          console.log('✅ PRODUCTS:', products);
-          this.dataSource.data = products;
+          // ✅ Force Angular to update UI
+          this.zone.run(() => {
+            console.log('✅ PRODUCTS:', products);
+            this.dataSource.data = products ?? [];
+            this.loading = false;
+            this.cdr.detectChanges();
+          });
         },
         error: (err: any) => {
-          console.error('❌ PRODUCTS ERROR:', err);
+          this.zone.run(() => {
+            console.error('❌ PRODUCTS ERROR:', err);
+            this.loading = false;
+            this.cdr.detectChanges();
 
-          if (this.isUnauthorized(err)) {
-            this.auth.logout();
-            this.router.navigateByUrl('/login');
-            return;
-          }
+            if (this.isUnauthorized(err)) {
+              this.auth.logout();
+              this.router.navigateByUrl('/login');
+              return;
+            }
 
-          this.snack.open('Failed to load products', 'Close', { duration: 2500 });
+            this.snack.open('Failed to load products', 'Close', { duration: 2500 });
+          });
         },
       });
+
+    // Safety: si pour une raison X ça reste bloqué
+    setTimeout(() => {
+      if (this.loading) {
+        console.warn('⏳ Still loading after 3s -> forcing stop');
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    }, 3000);
   }
 
   goCreate(): void {
@@ -94,7 +115,7 @@ export class ProductsComponent implements OnInit {
     this.productsApi.delete(p.id).subscribe({
       next: () => {
         this.snack.open('Product deleted', 'Close', { duration: 2000 });
-        this.loadProducts(); // refresh
+        this.loadProducts();
       },
       error: (err: any) => {
         console.error('❌ DELETE ERROR:', err);

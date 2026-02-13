@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { gql } from '@apollo/client/core';
 import { map } from 'rxjs/operators';
-import { setToken, clearToken, getToken } from './auth-token';
+import { setToken, clearToken, getToken, hasValidToken } from './auth-token';
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -18,7 +18,7 @@ export class AuthService {
   private apollo = inject(Apollo);
 
   isLoggedIn(): boolean {
-    return !!getToken();
+    return hasValidToken();
   }
 
   login(username: string, password: string) {
