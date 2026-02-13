@@ -14,11 +14,14 @@ import { Product, ProductService } from '../../core/product.service';
 import { AuthService } from '../../core/auth.service';
 import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [
     CommonModule,
+    TranslateModule,
     MatTableModule,
     MatButtonModule,
     MatProgressBarModule,

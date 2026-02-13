@@ -1,0 +1,42 @@
+{
+  "app": {
+    "title": "PMS Frontend"
+  },
+  "menu": {
+    "products": "Products",
+    "language": "Language",
+    "logout": "Logout"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "products": {
+    "title": "Products",
+    "new": "New",
+    "edit": "Edit",
+    "delete": "Delete",
+    "name": "Name",
+    "price": "Price",
+    "quantity": "Quantity",
+    "actions": "Actions",
+    "empty": "No products yet."
+  },
+  "auth": {
+    "login": "Login",
+    "username": "Username",
+    "password": "Password"
+  },
+  "snack": {
+    "load_products_failed": "Failed to load products",
+    "deleted": "Product deleted",
+    "delete_failed": "Delete failed",
+    "forbidden_delete": "You are not allowed to delete products",
+    "invalid_credentials": "Invalid credentials",
+    "server_unreachable": "Server unreachable"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel"
+  }
+}

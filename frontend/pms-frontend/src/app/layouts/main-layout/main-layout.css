@@ -1,24 +1,6 @@
+/* Layout */
 .layout {
   height: 100vh;
-}
-
-/* --- DARK MODE: on force les surfaces Material visibles --- */
-.layout.dark {
-  background: #121212;
-  color: #eee;
-}
-
-/* Sidenav / drawer */
-.layout.dark .sidenav,
-.layout.dark .mat-drawer {
-  background: #1e1e1e !important;
-  color: #eee !important;
-}
-
-/* Toolbar */
-.layout.dark .mat-toolbar {
-  background: #202a70 !important; /* garde ton bleu mais plus sombre */
-  color: #fff !important;
 }
 
 /* Page content area */
@@ -26,16 +8,53 @@
   padding: 16px;
 }
 
-/* Petites utilitaires */
+/* Toolbar helpers */
 .toolbar .spacer {
   flex: 1 1 auto;
 }
 
+/* Sidenav */
 .sidenav {
   width: 260px;
 }
 
-/* Bouton full width */
+/* Full width button */
 .w-full {
   width: 100%;
+}
+
+/* =========================
+   DARK MODE (via html.dark)
+   ========================= */
+
+/* Background global */
+html.dark body {
+  background: #121212;
+  color: #eaeaea;
+}
+
+/* Container + drawer surfaces */
+html.dark .mat-drawer-container,
+html.dark .mat-sidenav-container,
+html.dark .mat-drawer,
+html.dark .sidenav {
+  background: #1e1e1e !important;
+  color: #eaeaea !important;
+}
+
+/* Page */
+html.dark .page {
+  background: #121212;
+}
+
+/* Toolbar (on garde ton bleu, mais dark friendly) */
+html.dark .mat-toolbar.mat-primary {
+  background: #202a70 !important;
+  color: #fff !important;
+}
+
+/* Text in toolbar */
+html.dark .mat-toolbar,
+html.dark .mat-toolbar * {
+  color: #fff !important;
 }

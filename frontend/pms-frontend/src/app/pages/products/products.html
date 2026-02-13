@@ -1,11 +1,16 @@
 <div class="flex items-center justify-between mb-4">
   <div>
-    <h1 class="text-2xl font-semibold">Products</h1>
+    <h1 class="text-2xl font-semibold">{{ 'PRODUCTS.TITLE' | translate }}</h1>
   </div>
 
   <div class="flex gap-2">
-    <button mat-raised-button color="primary" (click)="goCreate()">New</button>
-    <button mat-stroked-button color="warn" (click)="logout()">Logout</button>
+    <button mat-raised-button color="primary" (click)="goCreate()">
+      {{ 'PRODUCTS.NEW' | translate }}
+    </button>
+
+    <button mat-stroked-button color="warn" (click)="logout()">
+      {{ 'AUTH.LOGOUT' | translate }}
+    </button>
   </div>
 </div>
 
@@ -13,25 +18,37 @@
 
 <table mat-table [dataSource]="dataSource" class="w-full mt-4" *ngIf="!loading">
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <th mat-header-cell *matHeaderCellDef>
+      {{ 'PRODUCTS.TABLE.NAME' | translate }}
+    </th>
     <td mat-cell *matCellDef="let p">{{ p.name }}</td>
   </ng-container>
 
   <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef>Price</th>
+    <th mat-header-cell *matHeaderCellDef>
+      {{ 'PRODUCTS.TABLE.PRICE' | translate }}
+    </th>
     <td mat-cell *matCellDef="let p">{{ p.price }}</td>
   </ng-container>
 
   <ng-container matColumnDef="quantity">
-    <th mat-header-cell *matHeaderCellDef>Quantity</th>
+    <th mat-header-cell *matHeaderCellDef>
+      {{ 'PRODUCTS.TABLE.QUANTITY' | translate }}
+    </th>
     <td mat-cell *matCellDef="let p">{{ p.quantity }}</td>
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <th mat-header-cell *matHeaderCellDef>
+      {{ 'PRODUCTS.TABLE.ACTIONS' | translate }}
+    </th>
     <td mat-cell *matCellDef="let p" class="flex gap-2">
-      <button mat-button (click)="goEdit(p.id)">Edit</button>
-      <button mat-button color="warn" (click)="confirmDelete(p)">Delete</button>
+      <button mat-button (click)="goEdit(p.id)">
+        {{ 'COMMON.EDIT' | translate }}
+      </button>
+      <button mat-button color="warn" (click)="confirmDelete(p)">
+        {{ 'COMMON.DELETE' | translate }}
+      </button>
     </td>
   </ng-container>
 
@@ -40,5 +57,5 @@
 </table>
 
 <div class="mt-6 opacity-70" *ngIf="!loading && count === 0">
-  No products yet.
+  {{ 'PRODUCTS.EMPTY' | translate }}
 </div>

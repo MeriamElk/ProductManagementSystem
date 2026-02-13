@@ -11,6 +11,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { AuthService } from '../../core/auth.service';
+import { ThemeService, ThemeMode } from '../../core/theme.service';
 
 type Lang = 'FR' | 'EN';
 
@@ -36,11 +37,10 @@ type Lang = 'FR' | 'EN';
 export class MainLayoutComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private theme = inject(ThemeService);
 
-  darkMode = false;
   language: Lang = 'FR';
 
-  // mini i18n local (juste pour rendre le switch visible)
   t(key: 'products' | 'theme' | 'dark' | 'light' | 'language' | 'logout' | 'title'): string {
     const dict: Record<Lang, Record<string, string>> = {
       FR: {
@@ -65,15 +65,21 @@ export class MainLayoutComponent {
     return dict[this.language][key];
   }
 
-  toggleTheme(checked: boolean) {
-    this.darkMode = checked;
+  // ✅ connecté au ThemeService
+  get isDark(): boolean {
+    return this.theme.current === 'dark';
   }
 
-  toggleLanguage() {
+  onThemeToggle(checked: boolean): void {
+    const mode: ThemeMode = checked ? 'dark' : 'light';
+    this.theme.set(mode);
+  }
+
+  toggleLanguage(): void {
     this.language = this.language === 'FR' ? 'EN' : 'FR';
   }
 
-  logout() {
+  logout(): void {
     this.auth.logout();
     this.router.navigateByUrl('/login');
   }

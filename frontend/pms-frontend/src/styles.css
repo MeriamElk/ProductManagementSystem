@@ -3,3 +3,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html, body { height: 100%; }
+body { margin: 0; }
+
+/* =========================
+   DARK MODE (via html.dark)
+   ========================= */
+html.dark, html.dark body {
+  background: #121212;
+  color: #eaeaea;
+}
+
+/* Material base surfaces */
+html.dark .mat-drawer-container,
+html.dark .mat-sidenav-container {
+  background: #121212 !important;
+}
+
+/* Sidenav */
+html.dark .mat-drawer,
+html.dark .sidenav {
+  background: #1e1e1e !important;
+  color: #eaeaea !important;
+}

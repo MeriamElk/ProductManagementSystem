@@ -1,18 +1,41 @@
-import { ApplicationConfig, inject } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER, inject, importProvidersFrom } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, HttpClient, HttpHeaders } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+
+import { routes } from './app.routes';
+import { environment } from '../environments/environment';
 
 import { provideApollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-
 import { InMemoryCache } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 
-import { routes } from './app.routes';
-import { environment } from '../environments/environment';
 import { getToken, clearToken } from './core/auth-token';
+import { ThemeService } from './core/theme.service';
+import { LanguageService } from './core/language.service';
+
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+
+type TranslationObject = Record<string, any>;
+
+// ✅ Loader custom (évite TranslateHttpLoader qui bug chez toi)
+export function translateLoaderFactory(http: HttpClient): TranslateLoader {
+  return {
+    getTranslation: (lang: string): Observable<TranslationObject> =>
+      http.get<TranslationObject>(`/assets/i18n/${lang}.json`),
+  };
+}
+
+export function initThemeFactory() {
+  return () => inject(ThemeService).init();
+}
+
+export function initLangFactory() {
+  return () => inject(LanguageService).init();
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,31 +43,51 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimations(),
 
+    // ✅ ngx-translate global
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        defaultLanguage: 'en',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: translateLoaderFactory,
+          deps: [HttpClient],
+        },
+      })
+    ),
+
+    // ✅ init theme + language
+    { provide: APP_INITIALIZER, useFactory: initThemeFactory, multi: true },
+    { provide: APP_INITIALIZER, useFactory: initLangFactory, multi: true },
+
+    // ✅ Apollo
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       const router = inject(Router);
 
-      const http = httpLink.create({
-        uri: environment.graphqlUrl,
-      });
+      const http = httpLink.create({ uri: environment.graphqlUrl });
 
-      const authLink = setContext((_, context: any) => {
+      // ✅ headers doit être HttpHeaders
+      const authLink = setContext(() => {
         const token = getToken();
         return {
-          headers: {
-            ...(context?.headers ?? {}),
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
+          headers: token
+            ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
+            : new HttpHeaders(),
         };
       });
 
-      const errorLink = onError((err: any) => {
-        const msg = JSON.stringify(err).toLowerCase();
+      const errorLink = onError(({ graphQLErrors, networkError }: any) => {
+        const msg =
+          (graphQLErrors?.map((e: any) => e.message).join(' ') ?? '') +
+          ' ' +
+          (networkError?.message ?? '');
+
+        const low = msg.toLowerCase();
 
         if (
-          msg.includes('401') ||
-          msg.includes('unauthorized') ||
-          msg.includes('signature has expired')
+          low.includes('401') ||
+          low.includes('unauthorized') ||
+          low.includes('signature has expired')
         ) {
           clearToken();
           router.navigateByUrl('/login');

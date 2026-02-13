@@ -1,0 +1,27 @@
+/* Light mode: petit style propre */
+table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* =========================
+   DARK MODE table styling
+   ========================= */
+html.dark table {
+  background: #1e1e1e;
+  color: #eaeaea;
+}
+
+html.dark th.mat-mdc-header-cell {
+  background: #262626;
+  color: #eaeaea;
+}
+
+html.dark td.mat-mdc-cell,
+html.dark th.mat-mdc-header-cell {
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+
+html.dark tr.mat-mdc-row:hover td.mat-mdc-cell {
+  background: rgba(255,255,255,0.04);
+}
