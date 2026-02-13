@@ -1,51 +1,63 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { ProductService } from '../../core/product.service';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
+  selector: 'app-product-edit',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
+
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatProgressBarModule,
   ],
   templateUrl: './product-edit.html',
+  styleUrls: ['./product-edit.css'],
 })
 export class ProductEditComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
-  private productService = inject(ProductService);
+  private api = inject(ProductService);
   private auth = inject(AuthService);
   private snack = inject(MatSnackBar);
 
-  id = Number(this.route.snapshot.paramMap.get('id'));
-  loading = true;
+  loading = false;
   notFound = false;
-  saving = false;
 
-  form = this.fb.group({
+  id = Number(this.route.snapshot.paramMap.get('id'));
+
+  form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
-    price: [0, [Validators.required, Validators.min(0.01)]],
+    price: [0, [Validators.required, Validators.min(0)]],
     quantity: [0, [Validators.required, Validators.min(0)]],
   });
 
-  ngOnInit() {
-    this.productService.getProductById(this.id).subscribe({
-      next: (p: any) => {
+  ngOnInit(): void {
+    if (!this.id) {
+      this.notFound = true;
+      return;
+    }
+
+    this.loading = true;
+
+    this.api.getProductById(this.id).subscribe({
+      next: (p) => {
         this.loading = false;
         this.form.patchValue({
           name: p.name,
@@ -56,54 +68,55 @@ export class ProductEditComponent {
       },
       error: (err: any) => {
         this.loading = false;
-        const msg = (err?.message || '').toLowerCase();
 
-        if (msg.includes('404') || msg.includes('not found')) {
-          this.notFound = true;
-          return;
-        }
+        const msg = (err?.message || '').toLowerCase();
         if (msg.includes('401') || msg.includes('unauthorized')) {
           this.auth.logout();
           this.router.navigateByUrl('/login');
           return;
         }
 
-        this.snack.open('Update failed', 'Close', { duration: 2500 });
+        this.notFound = true;
       },
     });
   }
 
-  save() {
-    if (this.form.invalid || this.saving) return;
-    this.saving = true;
+  save(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
 
     const v = this.form.getRawValue();
-
-    this.productService.update(this.id, {
-      name: v.name!,
-      description: v.description || null,
+    this.api.update(this.id, {
+      name: v.name.trim(),
+      description: v.description?.trim() || null,
       price: Number(v.price),
       quantity: Number(v.quantity),
     }).subscribe({
       next: () => {
-        this.saving = false;
+        this.loading = false;
         this.snack.open('Product updated successfully', 'Close', { duration: 2000 });
         this.router.navigateByUrl('/products');
       },
-      error: (err) => {
-        this.saving = false;
+      error: (err: any) => {
+        this.loading = false;
+
         const msg = (err?.message || '').toLowerCase();
         if (msg.includes('401') || msg.includes('unauthorized')) {
           this.auth.logout();
           this.router.navigateByUrl('/login');
           return;
         }
+
         this.snack.open('Update failed', 'Close', { duration: 2500 });
       },
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.router.navigateByUrl('/products');
   }
 }

@@ -1,38 +1,57 @@
-<h2 class="text-xl font-semibold mb-4">Edit Product</h2>
+<div class="max-w-xl mx-auto" *ngIf="!notFound; else nf">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-semibold">Edit Product</h1>
+    <button mat-stroked-button (click)="cancel()">Back</button>
+  </div>
 
-<div *ngIf="loading">Loading...</div>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-<div *ngIf="!loading && notFound" class="text-red-600">
-  Product not found
+  <form class="grid gap-4 mt-4" [formGroup]="form" (ngSubmit)="save()">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="form.controls.name.touched && form.controls.name.hasError('required')">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="form.controls.name.touched && form.controls.name.hasError('minlength')">
+        Min length is 2
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="3" formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" />
+      <mat-error *ngIf="form.controls.price.touched && form.controls.price.hasError('min')">
+        Price must be ≥ 0
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Quantity</mat-label>
+      <input matInput type="number" formControlName="quantity" />
+      <mat-error *ngIf="form.controls.quantity.touched && form.controls.quantity.hasError('min')">
+        Quantity must be ≥ 0
+      </mat-error>
+    </mat-form-field>
+
+    <div class="flex gap-2 justify-end">
+      <button mat-stroked-button type="button" (click)="cancel()" [disabled]="loading">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading || form.invalid">
+        Save
+      </button>
+    </div>
+  </form>
 </div>
 
-<form *ngIf="!loading && !notFound" [formGroup]="form" class="flex flex-col gap-3" (ngSubmit)="save()">
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" />
-    <mat-error *ngIf="form.controls.name.hasError('required')">Name required</mat-error>
-    <mat-error *ngIf="form.controls.name.hasError('minlength')">Min length 2</mat-error>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Description</mat-label>
-    <input matInput formControlName="description" />
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Price</mat-label>
-    <input matInput type="number" formControlName="price" />
-    <mat-error *ngIf="form.controls.price.hasError('min')">Price must be > 0</mat-error>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Quantity</mat-label>
-    <input matInput type="number" formControlName="quantity" />
-    <mat-error *ngIf="form.controls.quantity.hasError('min')">Quantity must be >= 0</mat-error>
-  </mat-form-field>
-
-  <div class="flex gap-2">
-    <button mat-raised-button color="primary" [disabled]="form.invalid || saving">Save</button>
-    <button mat-button type="button" (click)="cancel()">Cancel</button>
+<ng-template #nf>
+  <div class="p-6">
+    <h2 class="text-xl font-semibold mb-2">Product not found</h2>
+    <button mat-stroked-button (click)="cancel()">Back to products</button>
   </div>
-</form>
+</ng-template>
