@@ -2,8 +2,8 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Any
 
-from jose import jwt
-
+from jose import jwt, JWTError
+from typing import Dict, Any, Optional
 
 def _get_jwt_settings() -> Dict[str, Any]:
     secret = os.getenv("JWT_SECRET")
@@ -28,20 +28,48 @@ def _get_jwt_settings() -> Dict[str, Any]:
 def create_access_token(*, user_id: int, username: str, role: str) -> str:
     """
     Create a JWT access token.
-    Payload required by the US:
-      - userid
+    Payload required by US-3.2:
+      - userId
       - username
       - role
       - exp
     """
     settings = _get_jwt_settings()
 
-    exp = datetime.now(timezone.utc) + timedelta(minutes=settings["expires_minutes"])
+    now = datetime.now(timezone.utc)
+    exp = now + timedelta(minutes=settings["expires_minutes"])
+
     payload = {
-        "userid": user_id,
+        "userId": user_id,      
         "username": username,
         "role": role,
         "exp": exp,
+        "iat": now,             
     }
 
     return jwt.encode(payload, settings["secret"], algorithm=settings["algorithm"])
+
+
+def decode_token(token: str) -> Dict[str, Any]:
+    settings = _get_jwt_settings()
+
+    try:
+        return jwt.decode(
+            token,
+            settings["secret"],
+            algorithms=[settings["algorithm"]],
+        )
+    except JWTError:
+        raise ValueError("Invalid or expired token")
+
+
+def get_bearer_token(headers: Dict[str, Any]) -> Optional[str]:
+    auth = headers.get("authorization") or headers.get("Authorization")
+    if not auth:
+        return None
+
+    if not auth.lower().startswith("bearer "):
+        return None
+
+    return auth.split(" ", 1)[1].strip()
+

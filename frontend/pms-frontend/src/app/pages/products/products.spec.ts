@@ -1,23 +1,40 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { ProductsComponent } from './products';
+import { ProductService } from '../../core/product.service';
+import { AuthService } from '../../core/auth.service';
 
-import { Products } from './products';
+import { TranslateModule } from '@ngx-translate/core';
 
-describe('Products', () => {
-  let component: Products;
-  let fixture: ComponentFixture<Products>;
-
+describe('ProductsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Products]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(Products);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
+      imports: [
+        ProductsComponent,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        {
+          provide: ProductService,
+          useValue: {
+            products: () => ({
+              subscribe: () => {},
+            }),
+          },
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            logout: () => {},
+            isLoggedIn: () => true,
+            currentUser: null,
+          },
+        },
+      ],
+    }).compileComponents();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    const fixture = TestBed.createComponent(ProductsComponent);
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });
