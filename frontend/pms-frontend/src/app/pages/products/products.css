@@ -1,27 +1,18 @@
-/* Light mode: petit style propre */
-table {
-  border-radius: 10px;
-  overflow: hidden;
+html.dark .mat-mdc-table {
+  background: #111827; 
 }
 
-/* =========================
-   DARK MODE table styling
-   ========================= */
-html.dark table {
-  background: #1e1e1e;
-  color: #eaeaea;
+html.dark .mat-mdc-header-row,
+html.dark .mat-mdc-row {
+  background: transparent;
 }
 
-html.dark th.mat-mdc-header-cell {
-  background: #262626;
-  color: #eaeaea;
+html.dark .mat-mdc-header-cell,
+html.dark .mat-mdc-cell {
+  color: #e5e7eb !important; 
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
-html.dark td.mat-mdc-cell,
-html.dark th.mat-mdc-header-cell {
-  border-bottom-color: rgba(255,255,255,0.08) !important;
-}
-
-html.dark tr.mat-mdc-row:hover td.mat-mdc-cell {
-  background: rgba(255,255,255,0.04);
+html.dark .mat-mdc-row:hover .mat-mdc-cell {
+  background: rgba(255, 255, 255, 0.04);
 }

@@ -38,7 +38,6 @@ export class AuthService {
 
   logout(): void {
     clearToken();
-    // clean cache (optionnel mais recommandé)
     this.apollo.client.resetStore().catch(() => {});
   }
 }

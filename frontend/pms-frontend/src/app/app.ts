@@ -22,12 +22,12 @@ export class App {
   testApi() {
     this.productService.getProductsOnce().subscribe({
       next: (products) => {
-        console.log('✅ PRODUCTS:', products);
-        alert('✅ Check console (F12) : PRODUCTS');
+        console.log('PRODUCTS:', products);
+        alert('Check console (F12) : PRODUCTS');
       },
       error: (err: any) => {
-        console.error('❌ API ERROR:', err);
-        alert('❌ API ERROR (F12 console)');
+        console.error('API ERROR:', err);
+        alert('API ERROR (F12 console)');
       },
     });
   }

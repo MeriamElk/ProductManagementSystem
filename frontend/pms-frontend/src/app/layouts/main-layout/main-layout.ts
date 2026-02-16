@@ -10,10 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 import { AuthService } from '../../core/auth.service';
 import { ThemeService, ThemeMode } from '../../core/theme.service';
-
-type Lang = 'FR' | 'EN';
+import { LanguageService } from '../../core/language.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -30,6 +31,8 @@ type Lang = 'FR' | 'EN';
     MatButtonModule,
     MatSlideToggleModule,
     MatDividerModule,
+
+    TranslateModule,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
@@ -38,36 +41,14 @@ export class MainLayoutComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private theme = inject(ThemeService);
+  private lang = inject(LanguageService);
 
-  language: Lang = 'FR';
-
-  t(key: 'products' | 'theme' | 'dark' | 'light' | 'language' | 'logout' | 'title'): string {
-    const dict: Record<Lang, Record<string, string>> = {
-      FR: {
-        title: 'PMS Frontend',
-        products: 'Produits',
-        theme: 'Thème',
-        dark: 'Sombre',
-        light: 'Clair',
-        language: 'Langue',
-        logout: 'Déconnexion',
-      },
-      EN: {
-        title: 'PMS Frontend',
-        products: 'Products',
-        theme: 'Theme',
-        dark: 'Dark',
-        light: 'Light',
-        language: 'Language',
-        logout: 'Logout',
-      },
-    };
-    return dict[this.language][key];
-  }
-
-  // ✅ connecté au ThemeService
   get isDark(): boolean {
     return this.theme.current === 'dark';
+  }
+
+  get languageLabel(): 'EN' | 'FR' {
+    return this.lang.lang === 'fr' ? 'FR' : 'EN';
   }
 
   onThemeToggle(checked: boolean): void {
@@ -76,7 +57,7 @@ export class MainLayoutComponent {
   }
 
   toggleLanguage(): void {
-    this.language = this.language === 'FR' ? 'EN' : 'FR';
+    this.lang.toggle();
   }
 
   logout(): void {

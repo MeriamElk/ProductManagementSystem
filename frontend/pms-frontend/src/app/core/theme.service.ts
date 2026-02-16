@@ -30,7 +30,6 @@ export class ThemeService {
     this.mode = mode;
     localStorage.setItem(THEME_KEY, mode);
 
-    // applique globalement via classe sur <html>
     const root = document.documentElement;
     root.classList.toggle('dark', mode === 'dark');
   }

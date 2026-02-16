@@ -11,7 +11,6 @@ export class LanguageService {
   constructor(private translate: TranslateService) {}
 
   init(): void {
-    // langues supportées + défaut EN (US-12.1)
     this.translate.addLangs(['en', 'fr']);
     this.translate.setDefaultLang('en');
 

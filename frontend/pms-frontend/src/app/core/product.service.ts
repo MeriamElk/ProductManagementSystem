@@ -52,7 +52,6 @@ const DELETE_PRODUCT = gql`
 export class ProductService {
   constructor(private apollo: Apollo) {}
 
-  // one-shot (stable)
   getProductsOnce() {
     return this.apollo.query<{ products: Product[] }>({
       query: PRODUCTS_QUERY,
@@ -63,7 +62,6 @@ export class ProductService {
     );
   }
 
-  // watch (optionnel pour plus tard)
   watchProducts() {
     return this.apollo.watchQuery<{ products: Product[] }>({
       query: PRODUCTS_QUERY,

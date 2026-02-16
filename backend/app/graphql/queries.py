@@ -20,7 +20,6 @@ class Query:
 
     @strawberry.field
     def products(self, info) -> List[ProductType]:
-        # Auth required
         request = info.context["request"]
         get_current_user(request)
 
@@ -40,7 +39,6 @@ class Query:
 
     @strawberry.field(name="productById")
     def product_by_id(self, info, id: int) -> ProductType:
-        # Auth required
         request = info.context["request"]
         get_current_user(request)
 

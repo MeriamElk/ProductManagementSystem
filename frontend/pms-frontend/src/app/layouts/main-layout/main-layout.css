@@ -1,39 +1,28 @@
-/* Layout */
 .layout {
   height: 100vh;
 }
 
-/* Page content area */
 .page {
   padding: 16px;
 }
 
-/* Toolbar helpers */
 .toolbar .spacer {
   flex: 1 1 auto;
 }
 
-/* Sidenav */
 .sidenav {
   width: 260px;
 }
 
-/* Full width button */
 .w-full {
   width: 100%;
 }
 
-/* =========================
-   DARK MODE (via html.dark)
-   ========================= */
-
-/* Background global */
 html.dark body {
   background: #121212;
   color: #eaeaea;
 }
 
-/* Container + drawer surfaces */
 html.dark .mat-drawer-container,
 html.dark .mat-sidenav-container,
 html.dark .mat-drawer,
@@ -42,18 +31,15 @@ html.dark .sidenav {
   color: #eaeaea !important;
 }
 
-/* Page */
 html.dark .page {
   background: #121212;
 }
 
-/* Toolbar (on garde ton bleu, mais dark friendly) */
 html.dark .mat-toolbar.mat-primary {
   background: #202a70 !important;
   color: #fff !important;
 }
 
-/* Text in toolbar */
 html.dark .mat-toolbar,
 html.dark .mat-toolbar * {
   color: #fff !important;

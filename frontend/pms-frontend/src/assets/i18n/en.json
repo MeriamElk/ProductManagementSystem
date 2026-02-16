@@ -1,42 +1,27 @@
 {
-  "app": {
-    "title": "PMS Frontend"
+  "PRODUCTS": {
+    "TITLE": "Products",
+    "NEW": "New",
+    "EMPTY": "No products yet.",
+    "TABLE": {
+      "NAME": "Name",
+      "PRICE": "Price",
+      "QUANTITY": "Quantity",
+      "ACTIONS": "Actions"
+    }
   },
-  "menu": {
-    "products": "Products",
-    "language": "Language",
-    "logout": "Logout"
+  "AUTH": {
+    "LOGOUT": "Logout"
   },
-  "theme": {
-    "light": "Light",
-    "dark": "Dark"
+  "COMMON": {
+    "EDIT": "Edit",
+    "DELETE": "Delete"
   },
-  "products": {
-    "title": "Products",
-    "new": "New",
-    "edit": "Edit",
-    "delete": "Delete",
-    "name": "Name",
-    "price": "Price",
-    "quantity": "Quantity",
-    "actions": "Actions",
-    "empty": "No products yet."
-  },
-  "auth": {
-    "login": "Login",
-    "username": "Username",
-    "password": "Password"
-  },
-  "snack": {
-    "load_products_failed": "Failed to load products",
-    "deleted": "Product deleted",
-    "delete_failed": "Delete failed",
-    "forbidden_delete": "You are not allowed to delete products",
-    "invalid_credentials": "Invalid credentials",
-    "server_unreachable": "Server unreachable"
-  },
-  "common": {
-    "save": "Save",
-    "cancel": "Cancel"
+  "LAYOUT": {
+    "THEME": "Theme",
+    "LIGHT": "Light",
+    "DARK": "Dark",
+    "LANGUAGE": "Language",
+    "MENU_PRODUCTS": "Products"
   }
 }

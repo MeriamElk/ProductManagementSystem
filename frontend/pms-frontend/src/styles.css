@@ -7,23 +7,46 @@
 html, body { height: 100%; }
 body { margin: 0; }
 
-/* =========================
-   DARK MODE (via html.dark)
-   ========================= */
 html.dark, html.dark body {
   background: #121212;
   color: #eaeaea;
 }
 
-/* Material base surfaces */
 html.dark .mat-drawer-container,
 html.dark .mat-sidenav-container {
   background: #121212 !important;
 }
 
-/* Sidenav */
 html.dark .mat-drawer,
 html.dark .sidenav {
   background: #1e1e1e !important;
   color: #eaeaea !important;
+}
+
+html.dark .mat-mdc-table {
+  background: #111827 !important; 
+}
+
+html.dark .mat-mdc-header-row {
+  background: #0b1220 !important; 
+}
+
+html.dark .mat-mdc-row {
+  background: transparent !important;
+}
+
+html.dark .mat-mdc-header-cell,
+html.dark .mat-mdc-cell {
+  color: #e5e7eb !important; 
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html.dark .mat-mdc-row:hover .mat-mdc-cell {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+html.dark .mat-mdc-button,
+html.dark .mat-mdc-unelevated-button,
+html.dark .mat-mdc-outlined-button {
+  color: #e5e7eb !important;
 }

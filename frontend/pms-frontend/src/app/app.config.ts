@@ -21,11 +21,12 @@ import { Observable } from 'rxjs';
 
 type TranslationObject = Record<string, any>;
 
-// ✅ Loader custom (évite TranslateHttpLoader qui bug chez toi)
 export function translateLoaderFactory(http: HttpClient): TranslateLoader {
   return {
-    getTranslation: (lang: string): Observable<TranslationObject> =>
-      http.get<TranslationObject>(`/assets/i18n/${lang}.json`),
+    getTranslation: (lang: string): Observable<TranslationObject> => {
+      const v = Date.now(); 
+      return http.get<TranslationObject>(`assets/i18n/${lang}.json?v=${v}`);
+    },
   };
 }
 
@@ -43,7 +44,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimations(),
 
-    // ✅ ngx-translate global
     importProvidersFrom(
       TranslateModule.forRoot({
         defaultLanguage: 'en',
@@ -55,18 +55,15 @@ export const appConfig: ApplicationConfig = {
       })
     ),
 
-    // ✅ init theme + language
     { provide: APP_INITIALIZER, useFactory: initThemeFactory, multi: true },
     { provide: APP_INITIALIZER, useFactory: initLangFactory, multi: true },
 
-    // ✅ Apollo
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       const router = inject(Router);
 
       const http = httpLink.create({ uri: environment.graphqlUrl });
 
-      // ✅ headers doit être HttpHeaders
       const authLink = setContext(() => {
         const token = getToken();
         return {

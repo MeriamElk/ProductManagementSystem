@@ -1,42 +1,27 @@
 {
-  "app": {
-    "title": "PMS Frontend"
+  "PRODUCTS": {
+    "TITLE": "Produits",
+    "NEW": "Nouveau",
+    "EMPTY": "Aucun produit.",
+    "TABLE": {
+      "NAME": "Nom",
+      "PRICE": "Prix",
+      "QUANTITY": "Quantité",
+      "ACTIONS": "Actions"
+    }
   },
-  "menu": {
-    "products": "Produits",
-    "language": "Langue",
-    "logout": "Déconnexion"
+  "AUTH": {
+    "LOGOUT": "Déconnexion"
   },
-  "theme": {
-    "light": "Clair",
-    "dark": "Sombre"
+  "COMMON": {
+    "EDIT": "Modifier",
+    "DELETE": "Supprimer"
   },
-  "products": {
-    "title": "Produits",
-    "new": "Nouveau",
-    "edit": "Modifier",
-    "delete": "Supprimer",
-    "name": "Nom",
-    "price": "Prix",
-    "quantity": "Quantité",
-    "actions": "Actions",
-    "empty": "Aucun produit."
-  },
-  "auth": {
-    "login": "Connexion",
-    "username": "Nom d'utilisateur",
-    "password": "Mot de passe"
-  },
-  "snack": {
-    "load_products_failed": "Échec du chargement des produits",
-    "deleted": "Produit supprimé",
-    "delete_failed": "Suppression échouée",
-    "forbidden_delete": "Vous n'êtes pas autorisé à supprimer des produits",
-    "invalid_credentials": "Identifiants invalides",
-    "server_unreachable": "Serveur injoignable"
-  },
-  "common": {
-    "save": "Enregistrer",
-    "cancel": "Annuler"
+  "LAYOUT": {
+    "THEME": "Thème",
+    "LIGHT": "Clair",
+    "DARK": "Sombre",
+    "LANGUAGE": "Langue",
+    "MENU_PRODUCTS": "Produits"
   }
 }

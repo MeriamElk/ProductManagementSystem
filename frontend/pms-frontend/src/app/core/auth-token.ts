@@ -12,7 +12,6 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY);
 }
 
-// --- JWT helpers (sans librairie) ---
 type JwtPayload = { exp?: number; [key: string]: any };
 
 function base64UrlDecode(input: string): string {
@@ -39,7 +38,7 @@ export function getTokenPayload(token: string): JwtPayload | null {
 export function isTokenExpired(token: string): boolean {
   const payload = getTokenPayload(token);
   const exp = payload?.exp;
-  if (!exp) return false; // si pas d'exp, on ne bloque pas
+  if (!exp) return false; 
   const now = Math.floor(Date.now() / 1000);
   return exp <= now;
 }

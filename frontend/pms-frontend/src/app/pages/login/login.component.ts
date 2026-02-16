@@ -83,7 +83,6 @@ export class LoginComponent {
       error: (err) => {
         this.loading = false;
 
-        // Apollo: "NetworkError" si serveur down, sinon GraphQL errors dans message
         const msg = (err?.message || '').toLowerCase();
 
         if (msg.includes('invalid credentials') || msg.includes('401')) {
