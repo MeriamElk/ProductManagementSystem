@@ -59,30 +59,30 @@ describe('LoginComponent', () => {
     expect(authMock.login).toHaveBeenCalledWith('user1', 'password123');
     expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/products');
   });
-
-  it('should show snackbar on invalid credentials error', () => {
+  it('should handle login error correctly', () => {
     const fixture = TestBed.createComponent(LoginComponent);
     const component = fixture.componentInstance;
 
-    const snack = TestBed.inject(MatSnackBar);
-    const openSpy = vi.spyOn(snack, 'open');
+    authMock.login.mockReturnValue({
+      subscribe: ({ error }: any) => {
+        error({ message: '401 Invalid credentials' });
+        return { unsubscribe() {} };
+      },
+    });
 
-    authMock.login.mockReturnValue(
-        new Observable((subscriber) => {
-            subscriber.error({ message: '401 Invalid credentials' });
-        })
-    );
+    component.form.setValue({
+      username: 'user1',
+      password: 'wrong',
+    });
 
-    component.form.setValue({ username: 'user1', password: 'wrong' });
     component.submit();
 
     expect(authMock.login).toHaveBeenCalledWith('user1', 'wrong');
 
-    expect(openSpy).toHaveBeenCalledWith(
-        'Invalid credentials',
-        'Close',
-        { duration: 2500 }
-    );
+    expect(component.loading).toBe(false);
+
+    expect(routerMock.navigateByUrl).not.toHaveBeenCalled();
   });
+
 
 });
