@@ -1,65 +1,85 @@
 <mat-sidenav-container class="layout">
-  <mat-sidenav #sidenav mode="side" opened class="sidenav">
-    <div class="p-4 font-semibold text-lg">PMS</div>
+
+  <mat-sidenav
+    #sidenav
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="false"
+    class="sidenav">
+
+    <div class="sidenav-logo">
+      <div class="sidenav-logo-icon">
+        <mat-icon>inventory_2</mat-icon>
+      </div>
+      <span>PMS</span>
+    </div>
+
     <mat-divider></mat-divider>
 
     <mat-nav-list>
-      <a mat-list-item routerLink="/products">
+      <a mat-list-item
+         routerLink="/products"
+         routerLinkActive="active-link"
+         class="nav-item">
         <mat-icon matListItemIcon>inventory_2</mat-icon>
         <span matListItemTitle>{{ 'LAYOUT.MENU_PRODUCTS' | translate }}</span>
       </a>
     </mat-nav-list>
 
+    <div class="sidenav-spacer"></div>
+
     <mat-divider></mat-divider>
 
-    <div class="px-4 py-3">
-      <div class="text-sm mb-2">{{ 'LAYOUT.THEME' | translate }}</div>
-
-      <div class="flex items-center justify-between gap-3">
-        <span class="text-xs opacity-80">{{ 'LAYOUT.LIGHT' | translate }}</span>
-
-        <mat-slide-toggle
-          [checked]="isDark"
-          (change)="onThemeToggle($event.checked)">
+    <!-- Theme -->
+    <div class="sidenav-panel">
+      <div class="sidenav-panel-label">{{ 'LAYOUT.THEME' | translate }}</div>
+      <div class="theme-toggle-row">
+        <mat-icon class="theme-icon">light_mode</mat-icon>
+        <mat-slide-toggle [checked]="isDark" (change)="onThemeToggle($event.checked)">
         </mat-slide-toggle>
-
-        <span class="text-xs opacity-80">{{ 'LAYOUT.DARK' | translate }}</span>
+        <mat-icon class="theme-icon">dark_mode</mat-icon>
+        <span class="theme-label">
+          {{ isDark ? ('LAYOUT.DARK' | translate) : ('LAYOUT.LIGHT' | translate) }}
+        </span>
       </div>
     </div>
 
     <mat-divider></mat-divider>
 
-    <div class="px-4 py-3">
-      <div class="text-sm mb-2">{{ 'LAYOUT.LANGUAGE' | translate }}</div>
-      <button mat-stroked-button (click)="toggleLanguage()">
+    <!-- Language -->
+    <div class="sidenav-panel">
+      <div class="sidenav-panel-label">{{ 'LAYOUT.LANGUAGE' | translate }}</div>
+      <button mat-stroked-button (click)="toggleLanguage()" class="sidenav-full-btn">
+        <mat-icon>translate</mat-icon>
         {{ languageLabel }}
       </button>
     </div>
 
-    <div class="px-4 pb-4">
-      <button mat-stroked-button color="warn" class="w-full" (click)="logout()">
+    <mat-divider></mat-divider>
+
+    <!-- Logout -->
+    <div class="sidenav-panel">
+      <button mat-stroked-button color="warn" class="sidenav-full-btn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
         {{ 'AUTH.LOGOUT' | translate }}
       </button>
     </div>
+
   </mat-sidenav>
 
   <mat-sidenav-content>
+
     <mat-toolbar color="primary" class="toolbar">
-      <button mat-icon-button (click)="sidenav.toggle()">
+      <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle menu">
         <mat-icon>menu</mat-icon>
       </button>
-
-      <span class="ml-2 font-semibold">{{ 'PRODUCTS.TITLE' | translate }}</span>
-
+      <span class="toolbar-title">{{ pageTitle }}</span>
       <span class="spacer"></span>
-
-      <button mat-button disabled class="ml-3">
-        {{ 'LAYOUT.MENU_PRODUCTS' | translate }}
-      </button>
     </mat-toolbar>
 
     <div class="page">
       <router-outlet></router-outlet>
     </div>
+
   </mat-sidenav-content>
+
 </mat-sidenav-container>

@@ -25,10 +25,17 @@ function base64UrlDecode(input: string): string {
   );
 }
 
+export function isJwtFormat(token: string): boolean {
+  return token.split('.').length === 3;
+}
+
 export function getTokenPayload(token: string): JwtPayload | null {
   try {
+    if (!isJwtFormat(token)) return null;
+
     const [, payload] = token.split('.');
     if (!payload) return null;
+
     return JSON.parse(base64UrlDecode(payload));
   } catch {
     return null;
@@ -37,8 +44,10 @@ export function getTokenPayload(token: string): JwtPayload | null {
 
 export function isTokenExpired(token: string): boolean {
   const payload = getTokenPayload(token);
+
   const exp = payload?.exp;
-  if (!exp) return false; 
+  if (!payload || !exp) return true;
+
   const now = Math.floor(Date.now() / 1000);
   return exp <= now;
 }
@@ -46,5 +55,6 @@ export function isTokenExpired(token: string): boolean {
 export function hasValidToken(): boolean {
   const token = getToken();
   if (!token) return false;
+  if (!isJwtFormat(token)) return false;
   return !isTokenExpired(token);
 }

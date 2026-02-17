@@ -1,52 +1,66 @@
-<div class="max-w-xl mx-auto">
-  <div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-semibold">Create Product</h1>
-    <button mat-stroked-button type="button" (click)="cancel()">Back</button>
+<div class="form-page-wrapper">
+
+  <div class="form-page-header">
+    <button mat-icon-button type="button" (click)="cancel()" class="back-btn" aria-label="Back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="form-page-title">Create Product</h1>
+      <p class="form-page-subtitle">Fill in the details below</p>
+    </div>
   </div>
 
-  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" class="mb-4" style="border-radius:4px"></mat-progress-bar>
 
-  <form class="flex flex-col gap-3 mt-4" [formGroup]="form" (ngSubmit)="save()">
-    <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
-      <mat-error *ngIf="form.controls.name.touched && form.controls.name.hasError('required')">
-        Name is required
-      </mat-error>
-      <mat-error *ngIf="form.controls.name.touched && form.controls.name.hasError('minlength')">
-        Min length is 2
-      </mat-error>
-    </mat-form-field>
+  <div class="form-card">
+    <form class="product-form" [formGroup]="form" (ngSubmit)="save()">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <textarea matInput rows="3" formControlName="description"></textarea>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="form.controls.name.touched && form.controls.name.hasError('required')">
+          Name is required
+        </mat-error>
+        <mat-error *ngIf="form.controls.name.touched && form.controls.name.hasError('minlength')">
+          Minimum 2 characters
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Price</mat-label>
-      <input matInput type="number" formControlName="price" />
-      <mat-error *ngIf="form.controls.price.touched && form.controls.price.hasError('min')">
-        Price must be ≥ 0
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="3" formControlName="description"></textarea>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Quantity</mat-label>
-      <input matInput type="number" formControlName="quantity" />
-      <mat-error *ngIf="form.controls.quantity.touched && form.controls.quantity.hasError('min')">
-        Quantity must be ≥ 0
-      </mat-error>
-    </mat-form-field>
+      <div class="form-row-2col">
+        <mat-form-field appearance="outline">
+          <mat-label>Price</mat-label>
+          <span matTextPrefix style="opacity:.5;margin-right:4px">$</span>
+          <input matInput type="number" formControlName="price" min="0" step="0.01" />
+          <mat-error *ngIf="form.controls.price.touched && form.controls.price.hasError('min')">
+            Price must be ≥ 0
+          </mat-error>
+        </mat-form-field>
 
-    <div class="flex gap-2 justify-end mt-2">
-      <button mat-stroked-button type="button" (click)="cancel()" [disabled]="loading">
-        Cancel
-      </button>
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" formControlName="quantity" min="0" step="1" />
+          <mat-error *ngIf="form.controls.quantity.touched && form.controls.quantity.hasError('min')">
+            Quantity must be ≥ 0
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
-        Save
-      </button>
-    </div>
-  </form>
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="cancel()" [disabled]="loading">
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+          <mat-icon>save</mat-icon>
+          Save product
+        </button>
+      </div>
+
+    </form>
+  </div>
+
 </div>

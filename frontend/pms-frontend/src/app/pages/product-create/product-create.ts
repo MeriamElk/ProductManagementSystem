@@ -12,6 +12,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProductService } from '../../core/product.service';
 import { AuthService } from '../../core/auth.service';
 
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-product-create',
   standalone: true,
@@ -24,6 +26,7 @@ import { AuthService } from '../../core/auth.service';
     MatButtonModule,
     MatSnackBarModule,
     MatProgressBarModule,
+    MatIconModule,
   ],
   templateUrl: './product-create.html',
   styleUrls: ['./product-create.css'],

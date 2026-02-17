@@ -1,20 +1,21 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule }     from '@angular/material/toolbar';
+import { MatSidenavModule }     from '@angular/material/sidenav';
+import { MatIconModule }        from '@angular/material/icon';
+import { MatListModule }        from '@angular/material/list';
+import { MatButtonModule }      from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatDividerModule }     from '@angular/material/divider';
 
 import { TranslateModule } from '@ngx-translate/core';
 
-import { AuthService } from '../../core/auth.service';
+import { AuthService }             from '../../core/auth.service';
 import { ThemeService, ThemeMode } from '../../core/theme.service';
-import { LanguageService } from '../../core/language.service';
+import { LanguageService }         from '../../core/language.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -23,7 +24,7 @@ import { LanguageService } from '../../core/language.service';
     CommonModule,
     RouterOutlet,
     RouterLink,
-
+    RouterLinkActive,
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,
@@ -31,17 +32,40 @@ import { LanguageService } from '../../core/language.service';
     MatButtonModule,
     MatSlideToggleModule,
     MatDividerModule,
-
     TranslateModule,
   ],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })
-export class MainLayoutComponent {
-  private auth = inject(AuthService);
+export class MainLayoutComponent implements OnInit {
+  private auth   = inject(AuthService);
   private router = inject(Router);
-  private theme = inject(ThemeService);
-  private lang = inject(LanguageService);
+  private theme  = inject(ThemeService);
+  private lang   = inject(LanguageService);
+
+  isMobile  = false;
+  pageTitle = 'Products';
+
+  ngOnInit(): void {
+    this.checkMobile();
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => this.updateTitle());
+    this.updateTitle();
+  }
+
+  @HostListener('window:resize')
+  checkMobile(): void {
+    this.isMobile = window.innerWidth < 768;
+  }
+
+  private updateTitle(): void {
+    const url = this.router.url;
+    if (url.includes('/products/new'))  this.pageTitle = 'New Product';
+    else if (url.includes('/edit'))     this.pageTitle = 'Edit Product';
+    else if (url.includes('/products')) this.pageTitle = 'Products';
+    else                                this.pageTitle = 'PMS';
+  }
 
   get isDark(): boolean {
     return this.theme.current === 'dark';
@@ -52,8 +76,7 @@ export class MainLayoutComponent {
   }
 
   onThemeToggle(checked: boolean): void {
-    const mode: ThemeMode = checked ? 'dark' : 'light';
-    this.theme.set(mode);
+    this.theme.set(checked ? 'dark' : 'light');
   }
 
   toggleLanguage(): void {

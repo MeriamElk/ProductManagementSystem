@@ -16,6 +16,8 @@ import { Product, ProductService } from '../../core/product.service';
 import { AuthService } from '../../core/auth.service';
 import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog';
 
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -26,7 +28,8 @@ import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog';
     MatProgressBarModule,
     MatSnackBarModule,
     MatDialogModule,
-    TranslateModule,  
+    TranslateModule,
+    MatIconModule,
   ],
   templateUrl: './products.html',
   styleUrls: ['./products.css'],
@@ -39,6 +42,8 @@ export class ProductsComponent implements OnInit {
   private dialog = inject(MatDialog);
 
   loading = false;
+  deleting = false;
+
   dataSource = new MatTableDataSource<Product>([]);
   columns = ['name', 'price', 'quantity', 'actions'];
 
@@ -84,12 +89,20 @@ export class ProductsComponent implements OnInit {
     const confirmed = await import('rxjs').then(({ firstValueFrom }) => firstValueFrom(ref.afterClosed()));
     if (!confirmed) return;
 
-    this.productsApi.delete(p.id).subscribe({
-      next: () => {
-        this.snack.open('Product deleted', 'Close', { duration: 2000 });
-        this.loadProducts();
-      },
-    });
+    this.deleting = true;
+
+    this.productsApi
+      .delete(p.id)
+      .pipe(finalize(() => (this.deleting = false)))
+      .subscribe({
+        next: () => {
+          this.snack.open('Product deleted', 'Close', { duration: 2000 });
+          this.loadProducts();
+        },
+        error: () => {
+          this.snack.open('Delete failed', 'Close', { duration: 2500 });
+        },
+      });
   }
 
   logout(): void {

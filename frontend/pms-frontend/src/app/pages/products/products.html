@@ -1,61 +1,70 @@
-<div class="flex items-center justify-between mb-4">
+<div class="products-header">
   <div>
-    <h1 class="text-2xl font-semibold">{{ 'PRODUCTS.TITLE' | translate }}</h1>
+    <h1 class="products-title">{{ 'PRODUCTS.TITLE' | translate }}</h1>
+    <p class="products-count" *ngIf="count > 0">{{ count }} items</p>
   </div>
+  <button mat-raised-button color="primary" (click)="goCreate()" class="btn-new">
+    <mat-icon>add</mat-icon>
+    {{ 'PRODUCTS.NEW' | translate }}
+  </button>
+</div>
 
-  <div class="flex gap-2">
-    <button mat-raised-button color="primary" (click)="goCreate()">
-      {{ 'PRODUCTS.NEW' | translate }}
-    </button>
+<mat-progress-bar *ngIf="loading || deleting" mode="indeterminate"
+  style="border-radius:4px;margin-bottom:12px"></mat-progress-bar>
 
-    <button mat-stroked-button color="warn" (click)="logout()">
-      {{ 'AUTH.LOGOUT' | translate }}
-    </button>
+<div class="table-card" *ngIf="!loading">
+  <div class="table-scroll-wrapper">
+    <table mat-table [dataSource]="dataSource" class="pms-table">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.NAME' | translate }}</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="product-name">{{ p.name }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.PRICE' | translate }}</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="price-chip">{{ p.price | number:'1.2-2' }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.QUANTITY' | translate }}</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="qty-badge">{{ p.quantity }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.ACTIONS' | translate }}</th>
+        <td mat-cell *matCellDef="let p">
+          <div class="actions-cell">
+            <button mat-stroked-button (click)="goEdit(p.id)" class="btn-action btn-edit">
+              <mat-icon>edit</mat-icon>
+              <span>{{ 'COMMON.EDIT' | translate }}</span>
+            </button>
+            <button mat-stroked-button color="warn" (click)="confirmDelete(p)"
+                    [disabled]="deleting" class="btn-action btn-delete">
+              <mat-icon>delete_outline</mat-icon>
+              <span>{{ 'COMMON.DELETE' | translate }}</span>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+    </table>
   </div>
 </div>
 
-<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
-
-<table mat-table [dataSource]="dataSource" class="w-full mt-4" *ngIf="!loading">
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>
-      {{ 'PRODUCTS.TABLE.NAME' | translate }}
-    </th>
-    <td mat-cell *matCellDef="let p">{{ p.name }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef>
-      {{ 'PRODUCTS.TABLE.PRICE' | translate }}
-    </th>
-    <td mat-cell *matCellDef="let p">{{ p.price }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="quantity">
-    <th mat-header-cell *matHeaderCellDef>
-      {{ 'PRODUCTS.TABLE.QUANTITY' | translate }}
-    </th>
-    <td mat-cell *matCellDef="let p">{{ p.quantity }}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef>
-      {{ 'PRODUCTS.TABLE.ACTIONS' | translate }}
-    </th>
-    <td mat-cell *matCellDef="let p" class="flex gap-2">
-      <button mat-button (click)="goEdit(p.id)">
-        {{ 'COMMON.EDIT' | translate }}
-      </button>
-      <button mat-button color="warn" (click)="confirmDelete(p)">
-        {{ 'COMMON.DELETE' | translate }}
-      </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-</table>
-
-<div class="mt-6 opacity-70" *ngIf="!loading && count === 0">
-  {{ 'PRODUCTS.EMPTY' | translate }}
+<div class="empty-state" *ngIf="!loading && count === 0">
+  <div class="empty-icon">📦</div>
+  <h3>{{ 'PRODUCTS.EMPTY' | translate }}</h3>
+  <button mat-raised-button color="primary" (click)="goCreate()">
+    <mat-icon>add</mat-icon>
+    {{ 'PRODUCTS.NEW' | translate }}
+  </button>
 </div>
