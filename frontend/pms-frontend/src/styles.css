@@ -5,12 +5,12 @@
 @tailwind utilities;
 
 :root {
-  --pms-primary:       #4f46e5;   /* indigo-600 */
+  --pms-primary:       #4f46e5;
   --pms-primary-light: #6366f1;
   --pms-primary-dark:  #3730a3;
 
   --pms-surface:       #ffffff;
-  --pms-surface-alt:   #f8fafc;   /* fond page */
+  --pms-surface-alt:   #f8fafc;
   --pms-border:        #e2e8f0;
 
   --pms-text:          #0f172a;
@@ -29,7 +29,7 @@
 
 html.dark {
   --pms-surface:      #1e2130;
-  --pms-surface-alt:  #252a3a;
+  --pms-surface-alt:  #121625; 
   --pms-border:       rgba(255,255,255,.10);
   --pms-text:         #f1f5f9;
   --pms-text-muted:   #94a3b8;
@@ -38,6 +38,7 @@ html.dark {
 }
 
 html, body { height: 100%; font-family: var(--pms-font); }
+
 body {
   margin: 0;
   background: var(--pms-surface-alt);
@@ -45,30 +46,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-html.dark body { background: #121625; color: var(--pms-text); }
+html.dark body { background: var(--pms-surface-alt); color: var(--pms-text); }
 
 html.dark .mat-drawer-container,
 html.dark .mat-sidenav-container {
-  background: #121625 !important;
+  background: var(--pms-surface-alt) !important;
 }
+
 html.dark .mat-drawer,
 html.dark .sidenav {
   background: var(--pms-surface) !important;
   color: var(--pms-text) !important;
   border-right: 1px solid var(--pms-border) !important;
-}
-
-/* ---- DARK — table ---- */
-html.dark .mat-mdc-table          { background: var(--pms-surface) !important; }
-html.dark .mat-mdc-header-row     { background: var(--pms-surface-alt) !important; }
-html.dark .mat-mdc-row            { background: transparent !important; }
-html.dark .mat-mdc-header-cell,
-html.dark .mat-mdc-cell {
-  color: var(--pms-text) !important;
-  border-bottom-color: var(--pms-border) !important;
-}
-html.dark .mat-mdc-row:hover .mat-mdc-cell {
-  background: rgba(255,255,255,.04) !important;
 }
 
 html.dark .mat-mdc-button,
@@ -98,6 +87,24 @@ html.dark .mat-mdc-card {
 }
 
 .mat-mdc-snack-bar-container { border-radius: var(--pms-radius-sm) !important; }
+
+html.dark .mat-mdc-table,
+html.dark .mat-mdc-paginator,
+html.dark .mat-mdc-dialog-container {
+  background: var(--pms-surface) !important;
+  color: var(--pms-text) !important;
+}
+
+html, body,
+.page,
+.table-card,
+.mat-mdc-table,
+.mat-mdc-header-row,
+.mat-mdc-row,
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
 
 @media (max-width: 599px)  { .hide-mobile  { display: none !important; } }
 @media (min-width: 600px)  { .hide-desktop { display: none !important; } }

@@ -1,22 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-import { finalize } from 'rxjs/operators';
 
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 import { TranslateModule } from '@ngx-translate/core';
 
 import { Product, ProductService } from '../../core/product.service';
 import { AuthService } from '../../core/auth.service';
 import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog';
-
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-products',
@@ -28,8 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatProgressBarModule,
     MatSnackBarModule,
     MatDialogModule,
-    TranslateModule,
     MatIconModule,
+    TranslateModule,
   ],
   templateUrl: './products.html',
   styleUrls: ['./products.css'],
@@ -40,6 +37,9 @@ export class ProductsComponent implements OnInit {
   private router = inject(Router);
   private snack = inject(MatSnackBar);
   private dialog = inject(MatDialog);
+
+  private zone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
 
   loading = false;
   deleting = false;
@@ -52,28 +52,41 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.zone.run(() => {
+      this.loadProducts();
+    });
   }
 
   loadProducts(): void {
-    this.loading = true;
+    this.zone.run(() => {
+      this.loading = true;
+      this.cdr.detectChanges();
+    });
 
-    this.productsApi
-      .getProductsOnce()
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
-        next: (products) => {
+    this.productsApi.getProductsOnce().subscribe({
+      next: (products) => {
+        this.zone.run(() => {
           this.dataSource.data = products;
-        },
-        error: (err: any) => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err: any) => {
+        this.zone.run(() => {
+          this.loading = false;
+
           if (this.isUnauthorized(err)) {
             this.auth.logout();
             this.router.navigateByUrl('/login');
+            this.cdr.detectChanges();
             return;
           }
+
           this.snack.open('Failed to load products', 'Close', { duration: 2500 });
-        },
-      });
+          this.cdr.detectChanges();
+        });
+      },
+    });
   }
 
   goCreate(): void {
@@ -89,20 +102,28 @@ export class ProductsComponent implements OnInit {
     const confirmed = await import('rxjs').then(({ firstValueFrom }) => firstValueFrom(ref.afterClosed()));
     if (!confirmed) return;
 
-    this.deleting = true;
+    this.zone.run(() => {
+      this.deleting = true;
+      this.cdr.detectChanges();
+    });
 
-    this.productsApi
-      .delete(p.id)
-      .pipe(finalize(() => (this.deleting = false)))
-      .subscribe({
-        next: () => {
+    this.productsApi.delete(p.id).subscribe({
+      next: () => {
+        this.zone.run(() => {
+          this.deleting = false;
           this.snack.open('Product deleted', 'Close', { duration: 2000 });
+          this.cdr.detectChanges();
           this.loadProducts();
-        },
-        error: () => {
+        });
+      },
+      error: () => {
+        this.zone.run(() => {
+          this.deleting = false;
           this.snack.open('Delete failed', 'Close', { duration: 2500 });
-        },
-      });
+          this.cdr.detectChanges();
+        });
+      },
+    });
   }
 
   logout(): void {
