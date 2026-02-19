@@ -71,7 +71,7 @@ export class ProductsComponent implements OnInit {
           this.cdr.detectChanges();
         });
       },
-      error: (err: any) => {
+      error: (err: unknown) => {
         this.zone.run(() => {
           this.loading = false;
 
@@ -108,17 +108,32 @@ export class ProductsComponent implements OnInit {
     });
 
     this.productsApi.delete(p.id).subscribe({
-      next: () => {
+      next: (ok: boolean) => {
         this.zone.run(() => {
           this.deleting = false;
+
+          if (!ok) {
+            this.snack.open('You are not allowed to delete products', 'Close', { duration: 2500 });
+            this.cdr.detectChanges();
+            return;
+          }
+
           this.snack.open('Product deleted', 'Close', { duration: 2000 });
           this.cdr.detectChanges();
           this.loadProducts();
         });
       },
-      error: () => {
+      error: (err: unknown) => {
         this.zone.run(() => {
           this.deleting = false;
+
+          if (this.isUnauthorized(err)) {
+            this.auth.logout();
+            this.router.navigateByUrl('/login');
+            this.cdr.detectChanges();
+            return;
+          }
+
           this.snack.open('Delete failed', 'Close', { duration: 2500 });
           this.cdr.detectChanges();
         });
@@ -131,8 +146,23 @@ export class ProductsComponent implements OnInit {
     this.router.navigateByUrl('/login');
   }
 
-  private isUnauthorized(err: any): boolean {
-    const msg = (err?.message || '').toLowerCase();
+  private isUnauthorized(err: unknown): boolean {
+    const msg = this.errorMessage(err);
     return msg.includes('401') || msg.includes('unauthorized');
+  }
+
+  private errorMessage(err: unknown): string {
+    if (!err) return '';
+    if (typeof err === 'string') return err.toLowerCase();
+
+    const anyErr = err as any;
+    const msg =
+      (anyErr?.message ?? '') +
+      ' ' +
+      (anyErr?.networkError?.message ?? '') +
+      ' ' +
+      (anyErr?.error?.message ?? '');
+
+    return String(msg).toLowerCase();
   }
 }
