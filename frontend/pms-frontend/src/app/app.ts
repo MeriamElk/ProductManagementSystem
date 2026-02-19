@@ -12,7 +12,6 @@ import { ProductService } from './core/product.service';
   standalone: true,
   imports: [CommonModule, RouterOutlet, MatToolbarModule, MatButtonModule],
   templateUrl: './app.html',
-  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('pms-frontend');
