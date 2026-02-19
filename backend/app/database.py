@@ -7,7 +7,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.models.base import Base
-from backend.app.models import user, product
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(dotenv_path=ROOT_DIR / ".env")

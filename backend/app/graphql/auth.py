@@ -24,10 +24,9 @@ def get_current_user(request: Request) -> User:
     except Exception:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    user_id = payload.get("userId")  
+    user_id = payload.get("userId")
     if not user_id:
         raise HTTPException(status_code=401, detail="Unauthorized")
-
 
     db = SessionLocal()
     user = db.query(User).filter(User.id == user_id).first()

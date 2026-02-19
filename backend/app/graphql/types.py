@@ -1,11 +1,13 @@
 import strawberry
 from typing import Optional
 
+
 @strawberry.type
 class UserType:
     id: int
     username: str
     role: str
+
 
 @strawberry.type
 class ProductType:

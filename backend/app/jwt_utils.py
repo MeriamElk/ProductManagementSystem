@@ -1,9 +1,9 @@
 import os
 from datetime import datetime, timedelta, timezone
-from typing import Dict, Any
 
 from jose import jwt, JWTError
 from typing import Dict, Any, Optional
+
 
 def _get_jwt_settings() -> Dict[str, Any]:
     secret = os.getenv("JWT_SECRET")
@@ -40,11 +40,11 @@ def create_access_token(*, user_id: int, username: str, role: str) -> str:
     exp = now + timedelta(minutes=settings["expires_minutes"])
 
     payload = {
-        "userId": user_id,      
+        "userId": user_id,
         "username": username,
         "role": role,
         "exp": exp,
-        "iat": now,             
+        "iat": now,
     }
 
     return jwt.encode(payload, settings["secret"], algorithm=settings["algorithm"])
@@ -72,4 +72,3 @@ def get_bearer_token(headers: Dict[str, Any]) -> Optional[str]:
         return None
 
     return auth.split(" ", 1)[1].strip()
-

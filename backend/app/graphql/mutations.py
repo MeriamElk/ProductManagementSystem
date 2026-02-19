@@ -51,7 +51,7 @@ class Mutation:
             username=username,
             email=email,
             password_hash=hash_password(password),
-            role=UserRole.USER,  
+            role=UserRole.USER,
         )
         db.add(user)
         db.commit()
@@ -77,7 +77,6 @@ class Mutation:
             token=token,
             user=UserType(id=user.id, username=user.username, role=user.role.value),
         )
-
 
     @strawberry.mutation(name="createProduct")
     def create_product(self, info, input: ProductInput) -> ProductType:

@@ -15,13 +15,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 def startup_event():
     test_db_connection()
     create_tables()
 
+
 graphql_app = GraphQLRouter(schema)
 app.include_router(graphql_app, prefix="/graphql")
+
 
 @app.get("/health")
 def health_check():
