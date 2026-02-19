@@ -3,20 +3,20 @@ import { Apollo } from 'apollo-angular';
 import { gql } from '@apollo/client/core';
 import { map } from 'rxjs/operators';
 
-export type Product = {
+export interface Product {
   id: number;
   name: string;
   description?: string | null;
   price: number;
   quantity: number;
-};
+}
 
-export type ProductInput = {
+export interface ProductInput {
   name: string;
   description?: string | null;
   price: number;
   quantity: number;
-};
+}
 
 const PRODUCTS_QUERY = gql`
   query Products {

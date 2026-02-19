@@ -48,7 +48,7 @@ describe('ProductCreateComponent', () => {
     const el: HTMLElement = fixture.nativeElement;
 
     expect(el.textContent).toContain('Create Product');
-    expect(el.textContent).toContain('Back');
+    expect(el.textContent).toContain('arrow_back');
     expect(el.textContent).toContain('Cancel');
     expect(el.textContent).toContain('Save');
   });

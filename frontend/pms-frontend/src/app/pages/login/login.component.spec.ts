@@ -2,11 +2,27 @@ import { TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../core/auth.service';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Observable } from 'rxjs';
+
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
+class FakeLoader implements TranslateLoader {
+  getTranslation() {
+    return of({
+      AUTH: {
+        LOGIN_TITLE: 'Login',
+        USERNAME: 'Username',
+        PASSWORD: 'Password',
+        LOGIN: 'Login',
+      },
+      COMMON: {
+        SUBMIT: 'Submit',
+      },
+    });
+  }
+}
 
 describe('LoginComponent', () => {
   let authMock: any;
@@ -19,7 +35,10 @@ describe('LoginComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         LoginComponent,
-        NoopAnimationsModule, 
+        NoopAnimationsModule,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: FakeLoader },
+        }),
       ],
       providers: [
         provideRouter([]),
@@ -31,6 +50,7 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     const fixture = TestBed.createComponent(LoginComponent);
+    fixture.detectChanges();
     expect(fixture.componentInstance).toBeTruthy();
   });
 
@@ -43,8 +63,17 @@ describe('LoginComponent', () => {
     const fixture = TestBed.createComponent(LoginComponent);
     fixture.detectChanges();
 
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-    expect(button.disabled).toBe(true);
+    const button = fixture.nativeElement.querySelector(
+      'button[type="submit"]'
+    ) as HTMLButtonElement | null;
+
+    expect(button).toBeTruthy();
+
+    // Angular Material peut gérer l'état via aria-disabled
+    const ariaDisabled = button!.getAttribute('aria-disabled');
+    const isDisabled = ariaDisabled === 'true' || button!.disabled === true;
+
+    expect(isDisabled).toBe(true);
   });
 
   it('should call auth.login and navigate on success', () => {
@@ -59,6 +88,7 @@ describe('LoginComponent', () => {
     expect(authMock.login).toHaveBeenCalledWith('user1', 'password123');
     expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/products');
   });
+
   it('should handle login error correctly', () => {
     const fixture = TestBed.createComponent(LoginComponent);
     const component = fixture.componentInstance;
@@ -78,11 +108,7 @@ describe('LoginComponent', () => {
     component.submit();
 
     expect(authMock.login).toHaveBeenCalledWith('user1', 'wrong');
-
     expect(component.loading).toBe(false);
-
     expect(routerMock.navigateByUrl).not.toHaveBeenCalled();
   });
-
-
 });

@@ -14,7 +14,7 @@ import { MatDividerModule }     from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { AuthService }             from '../../core/auth.service';
-import { ThemeService, ThemeMode } from '../../core/theme.service';
+import { ThemeService } from '../../core/theme.service';
 import { LanguageService }         from '../../core/language.service';
 
 @Component({

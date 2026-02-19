@@ -7,9 +7,9 @@ import { setToken, clearToken } from './auth-token';
 
 function base64Url(input: string): string {
   const base64 =
-    // @ts-ignore
+    // @ts-expect-error – mocking private method for test
     typeof Buffer !== 'undefined'
-      ? // @ts-ignore
+      ? // @ts-expect-error – mocking private method for test
         Buffer.from(input, 'utf-8').toString('base64')
       : btoa(input);
 

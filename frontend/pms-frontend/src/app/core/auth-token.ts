@@ -12,7 +12,7 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_KEY);
 }
 
-type JwtPayload = { exp?: number; [key: string]: any };
+interface JwtPayload { exp?: number; [key: string]: any }
 
 function base64UrlDecode(input: string): string {
   const base64 = input.replace(/-/g, '+').replace(/_/g, '/');

@@ -7,23 +7,39 @@ import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
+class FakeLoader implements TranslateLoader {
+  getTranslation() {
+    return of({
+      PRODUCTS: {
+        TITLE: 'Products',
+        NEW: 'New',
+        EMPTY: 'Empty',
+        TABLE: {
+          NAME: 'Name',
+          PRICE: 'Price',
+          QUANTITY: 'Quantity',
+          ACTIONS: 'Actions',
+        },
+      },
+      AUTH: { LOGOUT: 'Logout' },
+      COMMON: { EDIT: 'Edit', DELETE: 'Delete' },
+      LAYOUT: {
+        MENU_PRODUCTS: 'Products',
+        THEME: 'Theme',
+        DARK: 'Dark',
+        LIGHT: 'Light',
+        LANGUAGE: 'Language',
+      },
+    });
+  }
+}
 
 describe('ProductsComponent', () => {
   let apiMock: any;
   let authMock: any;
   let routerMock: any;
-
-  const translateServiceMock = {
-    // le pipe translate dépend du TranslateService + TranslateStore,
-    // mais dans la plupart des cas, fournir TranslateService suffit.
-    get: vi.fn(),
-    instant: vi.fn((k: string) => k),
-    onLangChange: of({}),
-    onTranslationChange: of({}),
-    onDefaultLangChange: of({}),
-    currentLang: 'en',
-  };
 
   beforeEach(async () => {
     apiMock = {
@@ -41,13 +57,18 @@ describe('ProductsComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ProductsComponent, NoopAnimationsModule],
+      imports: [
+        ProductsComponent,
+        NoopAnimationsModule,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: FakeLoader },
+        }),
+      ],
       providers: [
         provideRouter([]),
         { provide: ProductService, useValue: apiMock },
         { provide: AuthService, useValue: authMock },
         { provide: Router, useValue: routerMock },
-        { provide: TranslateService, useValue: translateServiceMock },
       ],
     }).compileComponents();
   });
@@ -55,6 +76,7 @@ describe('ProductsComponent', () => {
   it('should create', () => {
     apiMock.getProductsOnce.mockReturnValue(of([]));
     const fixture = TestBed.createComponent(ProductsComponent);
+    fixture.detectChanges();
     expect(fixture.componentInstance).toBeTruthy();
   });
 
