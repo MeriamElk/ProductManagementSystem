@@ -43,7 +43,11 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.pms-table { width: 100%; }
+.pms-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
 
 .mat-mdc-header-row {
   background: var(--pms-surface-alt) !important;
@@ -52,23 +56,23 @@
 .mat-mdc-header-cell {
   color: var(--pms-text-muted) !important;
   border-bottom: 1px solid var(--pms-border) !important;
+
+  text-align: center !important;
+  justify-content: center !important;
+
+  width: 25% !important;
 }
+
 
 .mat-mdc-cell {
   font-size: .875rem !important;
   color: var(--pms-text-muted) !important;
   border-bottom: 1px solid var(--pms-border) !important;
-  text-align: center !important;
-}
 
-.mat-column-name.mat-mdc-header-cell {
   text-align: center !important;
-  padding-left: 0 !important;
-}
+  justify-content: center !important;
 
-.mat-column-name .mat-mdc-cell {
-  text-align: left !important;
-  padding-left: 20px !important;
+  width: 25% !important;
 }
 
 .mat-mdc-row {
@@ -77,7 +81,7 @@
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  background: rgba(255,255,255,.03) !important; 
+  background: rgba(255,255,255,.03) !important;
 }
 
 .product-name {
@@ -93,6 +97,10 @@
   color: var(--pms-primary);
   font-weight: 600;
   font-size: .82rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .qty-badge {
@@ -108,16 +116,12 @@
   font-size: .82rem;
 }
 
-.mat-column-actions {
-  width: 180px;
-  min-width: 160px;
-}
-
 .actions-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .btn-action {
@@ -139,8 +143,14 @@
   height: .9rem !important;
 }
 
-.btn-edit   { color: var(--pms-primary) !important; border-color: rgba(99,102,241,.35) !important; }
-.btn-delete { border-color: rgba(239,68,68,.35) !important; }
+.btn-edit {
+  color: var(--pms-primary) !important;
+  border-color: rgba(99,102,241,.35) !important;
+}
+
+.btn-delete {
+  border-color: rgba(239,68,68,.35) !important;
+}
 
 .empty-state {
   display: flex;
@@ -173,8 +183,19 @@
 }
 
 @media (max-width: 599px) {
-  .products-header { flex-direction: column; }
-  .btn-new { width: 100%; }
-  .btn-action span { display: none; }
-  .btn-action { padding: 0 8px !important; }
+  .products-header {
+    flex-direction: column;
+  }
+
+  .btn-new {
+    width: 100%;
+  }
+
+  .btn-action span {
+    display: none;
+  }
+
+  .btn-action {
+    padding: 0 8px !important;
+  }
 }
