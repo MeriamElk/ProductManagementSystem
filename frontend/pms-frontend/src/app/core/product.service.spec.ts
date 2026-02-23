@@ -50,7 +50,6 @@ describe('ProductService (GraphQL)', () => {
     expect(result[0].name).toBe('P1');
   });
 
-  // ✅ Bonus (pas obligatoire pour US-13.3, mais utile)
   it('should call products watchQuery (watchProducts)', async () => {
     apolloMock.watchQuery.mockReturnValue({
       valueChanges: of({
